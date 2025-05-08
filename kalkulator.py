@@ -4,7 +4,7 @@ window = Tk()
 window.geometry("340x440")
 window.resizable(False, False)
 window.title("Kalkulator")
-icon = PhotoImage(file="python\\kinda useful\\kalkulator\\calc_img.png")
+icon = PhotoImage(file="calc_img.png")
 window.iconphoto(True, icon)
 
 eq_field = Label(window,
