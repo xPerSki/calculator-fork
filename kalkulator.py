@@ -25,20 +25,23 @@ entry_field.grid(row=1, column=0, columnspan=7, padx=7, pady=(0, 5))
 
 MR = 0
 
-def append_character(digit: str):
-    old = entry_field.cget("text")
-    entry_field.config(text=str(old) + str(digit))
+
+def append_character(character: str):
+    old = str(entry_field.cget("text"))
+    if old and old[-1] in "+-/*^" and character in "+-/*^":
+        entry_field.config(text=old[:-1] + character)
+    else:
+        entry_field.config(text=old + character)
 
 
 def clear_entry_label():
-    entry_field.config(text="")
-    if eq_field.cget("text")[-1] == "=":
-        eq_field.config(text="")
+    entry_field.config(text=eval(eq_field.cget("text")[:-1]))
 
 
 def clear_all():
     entry_field.config(text="")
     eq_field.config(text="")
+
 
 def memory_read():
     old = entry_field.cget("text")
@@ -47,7 +50,7 @@ def memory_read():
 
 def memory_add(minus=False):
     global MR
-    number = entry_field.cget("text")
+    number = str(entry_field.cget("text"))
     if minus:
         number = '-' + number
 
@@ -86,48 +89,21 @@ def factorial():
 
 
 def change_sign():
-    value = entry_field.cget("text")
+    value = str(entry_field.cget("text"))
     if '-' in value:
         entry_field.config(text=value[1:])
     else:
         entry_field.config(text='-' + value)
 
 
-def add():
-    adding = entry_field.cget("text")
-    what_in_eq_label = eq_field.cget("text")
-
-    if what_in_eq_label != "":
-        adding = str(what_in_eq_label) + str(adding)
-
-    if adding != "":
-        eq_field.config(text=adding)
-        entry_field.config(text="")
-
-
 def equals():
-    to_calculate1 = eq_field.cget("text")
-    to_calculate2 = entry_field.cget("text")
-    try:
-        eq_field.config(text=to_calculate1+to_calculate2+"=")
+    to_calculate = entry_field.cget("text")
+    eq_field.config(text=to_calculate+"=")
+    result = eval(to_calculate)
+    if int(result) == result:
+        result = int(result)
+    entry_field.config(text=result)
 
-        try:
-            entry_field.config(text=eval(to_calculate1+to_calculate2))
-
-        except SyntaxError:
-            entry_field.config(text=eval(to_calculate1[:-1]+to_calculate2))
-        
-        try:
-            if eq_field.cget("text")[-1] == "=":
-                eq_field.config(text=entry_field.cget("text"))
-                entry_field.config(text="")
-
-        except IndexError:
-            pass
-        
-    except TypeError:
-        pass
-    
 
 MC_button = Button(window, text="MC", font=("Arial", 9, "bold"), width=8, bg="black", foreground="white", command=memory_clear)
 MC_button.grid(row=2, column=0, pady=(0, 4))
@@ -201,7 +177,7 @@ multiply_button.grid(row=5, column=3)
 subtract_button = Button(window, text="-", font=("Arial", 20, "bold"), width=4, height=1, command=lambda: append_character('-'))
 subtract_button.grid(row=6, column=3)
 
-add_button = Button(window, text="+", font=("Arial", 20, "bold"), width=4, height=1, command=lambda: (append_character('+'), add()))
+add_button = Button(window, text="+", font=("Arial", 20, "bold"), width=4, height=1, command=lambda: append_character('+'))
 add_button.grid(row=7, column=3)
 
 change_button = Button(window, text="+/-", font=("Arial", 20, "bold"), width=4, height=1, command=change_sign)
