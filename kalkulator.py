@@ -12,15 +12,15 @@ eq_field = Label(window,
                 text="",
                 justify="right",
                 foreground="gray")
-eq_field.grid(row=0, column=0,columnspan=4,pady=1, padx=4, sticky="e")
+eq_field.grid(row=0, column=0,columnspan=4, pady=2, padx=4, sticky="e")
 
-entry_field = Entry(window, 
-                        font=("Arial",24,"bold"),
+entry_field = Label(window, 
+                        font=("Arial",22,"bold"),
                         justify="right",
                         width=18,
                         borderwidth=0,
                         bg="lightgray")
-entry_field.grid(row=1, column=0, columnspan=7, padx=7, pady=(0,8))
+entry_field.grid(row=1, column=0, columnspan=7, padx=7, pady=(0,10))
 
 def enter(key_enter):
     expression = entry_field.get()
