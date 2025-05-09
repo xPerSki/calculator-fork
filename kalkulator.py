@@ -25,15 +25,20 @@ entry_field.grid(row=1, column=0, columnspan=7, padx=7, pady=(0, 5))
 
 MR = 0
 
-
 def append_character(digit: str):
     old = entry_field.cget("text")
-    entry_field.config(text=old + digit)
+    entry_field.config(text=str(old) + str(digit))
 
 
 def clear_entry_label():
     entry_field.config(text="")
+    if eq_field.cget("text")[-1] == "=":
+        eq_field.config(text="")
 
+
+def clear_all():
+    entry_field.config(text="")
+    eq_field.config(text="")
 
 def memory_read():
     old = entry_field.cget("text")
@@ -74,7 +79,8 @@ def factorial():
     try:
         for i in range(2, int(n)+1):
             result *= i
-        entry_field.config(text=str(result))
+        eq_field.config(text=str(result))
+        entry_field.config(text="")
     except ValueError:
         entry_field.config(text="Err")
 
@@ -86,6 +92,42 @@ def change_sign():
     else:
         entry_field.config(text='-' + value)
 
+
+def add():
+    adding = entry_field.cget("text")
+    what_in_eq_label = eq_field.cget("text")
+
+    if what_in_eq_label != "":
+        adding = str(what_in_eq_label) + str(adding)
+
+    if adding != "":
+        eq_field.config(text=adding)
+        entry_field.config(text="")
+
+
+def equals():
+    to_calculate1 = eq_field.cget("text")
+    to_calculate2 = entry_field.cget("text")
+    try:
+        eq_field.config(text=to_calculate1+to_calculate2+"=")
+
+        try:
+            entry_field.config(text=eval(to_calculate1+to_calculate2))
+
+        except SyntaxError:
+            entry_field.config(text=eval(to_calculate1[:-1]+to_calculate2))
+        
+        try:
+            if eq_field.cget("text")[-1] == "=":
+                eq_field.config(text=entry_field.cget("text"))
+                entry_field.config(text="")
+
+        except IndexError:
+            pass
+        
+    except TypeError:
+        pass
+    
 
 MC_button = Button(window, text="MC", font=("Arial", 9, "bold"), width=8, bg="black", foreground="white", command=memory_clear)
 MC_button.grid(row=2, column=0, pady=(0, 4))
@@ -102,7 +144,7 @@ Mminus_button.grid(row=2, column=3, pady=(0, 4))
 backspace_button = Button(window, text="⌫", font=("Arial", 20, "bold"), width=4, height=1, command=backspace)
 backspace_button.grid(row=3, column=3)
 
-clear_button = Button(window, text="C", font=("Arial", 20, "bold"), width=4, height=1, bg="#ff0000")
+clear_button = Button(window, text="C", font=("Arial", 20, "bold"), width=4, height=1, bg="#ff0000", command=clear_all)
 clear_button.grid(row=3, column=2)
 
 clear_entry_button = Button(window, text="CE", font=("Arial", 20, "bold"), width=4, height=1, bg="#ff8585", command=clear_entry_label)
@@ -159,7 +201,7 @@ multiply_button.grid(row=5, column=3)
 subtract_button = Button(window, text="-", font=("Arial", 20, "bold"), width=4, height=1, command=lambda: append_character('-'))
 subtract_button.grid(row=6, column=3)
 
-add_button = Button(window, text="+", font=("Arial", 20, "bold"), width=4, height=1, command=lambda: append_character('+'))
+add_button = Button(window, text="+", font=("Arial", 20, "bold"), width=4, height=1, command=lambda: (append_character('+'), add()))
 add_button.grid(row=7, column=3)
 
 change_button = Button(window, text="+/-", font=("Arial", 20, "bold"), width=4, height=1, command=change_sign)
@@ -168,7 +210,7 @@ change_button.grid(row=8, column=0, pady=5)
 dot_button = Button(window, text=".", font=("Arial", 20, "bold"), width=4, height=1, command=lambda: append_character('.'))
 dot_button.grid(row=8, column=2)
 
-equal_to_button = Button(window, text="=", font=("Arial", 20, "bold"), width=4, height=1, bg="#00a7ff")
+equal_to_button = Button(window, text="=", font=("Arial", 20, "bold"), width=4, height=1, bg="#00a7ff", command=equals)
 equal_to_button.grid(row=8, column=3)
 
 window.mainloop()
