@@ -12,7 +12,9 @@ eq_field = Label(window,
                  font=("Arial", 12, "bold"),
                  text="",
                  justify="right",
-                 foreground="gray")
+                 foreground="gray",
+                 anchor="e",
+                 width=32)
 eq_field.grid(row=0, column=0, columnspan=4, pady=2, padx=4, sticky="e")
 
 entry_field = Label(window,
@@ -30,17 +32,21 @@ MR = 0
 
 def appendCharacter(character: str):
     old = str(entry_field.cget("text"))
-    if old == "" and character in "+-/*":
+    if old == "" and character in "+-/*.":
         pass
     else:
-        if old and old[-1] in "+-/*" and character in "+-/*":
+        if old and old[-1] in "+-/*." and character in "+-/*.":
             entry_field.config(text=old[:-1] + character)
         else:
             entry_field.config(text=old + character)
 
 
 def clearEntryLabel():
-    entry_field.config(text=eval(eq_field.cget("text")[:-1]))
+    
+    if eq_field.cget("text"):
+        entry_field.config(text=eval(eq_field.cget("text")[:-1]))
+    else:
+        entry_field.config(text='')
 
 
 def clearAll():
@@ -55,12 +61,15 @@ def memoryRead():
 
 def memoryAdd(minus=False):
     global MR
-    number = str(entry_field.cget("text"))
-    if minus:
-        number = '-' + number
+    try:
+        number = str(entry_field.cget("text"))
+        if minus:
+            number = '-' + number
 
-    MR += float(number) if '.' in number else int(number)
-    entry_field.config(text="")
+        MR += float(number) if '.' in number else int(number)
+        entry_field.config(text="")
+    except ValueError:
+        pass
 
 
 def memoryClear():
@@ -70,19 +79,24 @@ def memoryClear():
 
 def backspace():
     old = entry_field.cget("text")
-    
-    if old[-1] == "(":
-        entry_field.config(text=old[1:-4])
+    if len(old) > 0:
+        if old[-1] == "(":
+            entry_field.config(text=old[1:-4])
+        else:
+            entry_field.config(text=old[:-1])
     else:
-        entry_field.config(text=old[:-1])
+        pass
 
 
 def percent():
-    old = entry_field.cget("text")
-    val = float(old) / 100
-    if int(val) == float(val):
-        val = int(val)
-    entry_field.config(text=str(val))
+    old = str(entry_field.cget("text"))
+    if old:
+        val = float(old) / 100
+        if int(val) == float(val):
+            val = int(val)
+        entry_field.config(text=str(val))
+    else:
+        pass
 
 
 def factorial():
@@ -91,10 +105,10 @@ def factorial():
     try:
         for i in range(2, int(n)+1):
             result *= i
-        eq_field.config(text=str(result))
-        entry_field.config(text="")
+        eq_field.config(text=str(n)+"!=")
+        entry_field.config(text=result)
     except ValueError:
-        entry_field.config(text="Err")
+        pass
 
 
 def changeSign():
@@ -106,39 +120,46 @@ def changeSign():
 
 
 def equals():
-    to_calculate = entry_field.cget("text")
+    to_calculate = str(entry_field.cget("text"))
+    try:
+        if to_calculate[-1] in "+-/*.":
+            if "(" in to_calculate:
+                to_calculate += ")"
+                to_calculate = to_calculate[:-2]+to_calculate[-1]
+                result = eval(to_calculate)
+                eq_field.config(text=to_calculate+"=")
+            
+            else:
+                result = eval(to_calculate[:-1])
+                eq_field.config(text=to_calculate[:-1]+"=")
 
-    if to_calculate[-1] in "+-/*":
-        if "(" in result:
-            to_calculate += ")"
-            to_calculate = to_calculate[:-2]+to_calculate[-1]
-            result = eval(to_calculate)
-            eq_field.config(text=to_calculate+"=")
-        
-        else:
-            result = eval(to_calculate[:-1])
-            eq_field.config(text=to_calculate[:-1]+"=")
+        else:   
+            try:
+                if "(" in to_calculate:
+                    to_calculate += ")"
+                    result = eval(to_calculate)
+                    eq_field.config(text=to_calculate+"=")
+                
+                else:
+                    result = eval(to_calculate)
+                    eq_field.config(text=to_calculate+"=")
 
-    else:
-        if "(" in to_calculate:
-            to_calculate += ")"
-            result = eval(to_calculate)
-            eq_field.config(text=to_calculate+"=")
-        
-        else:
-            result = eval(to_calculate)
-            eq_field.config(text=to_calculate+"=")
-    
-    if int(result) == result:
-        result = int(result)
-    entry_field.config(text=result)
+                if int(result) == result:
+                    result = int(result)
+                    entry_field.config(text=result)
+
+            except TypeError:
+                entry_field.config(text="ERR")
+                
+    except IndexError:
+        pass
 
 
 def toThePowerOf():
     base = entry_field.cget("text")
 
     try:
-        if base[-1] in "+-/*" and base != "":
+        if base[-1] in "+-/*." and base != "":
                 entry_field.config(text=base[:-1] + "**")
         else:
             entry_field.config(text=base + "**")
@@ -147,10 +168,10 @@ def toThePowerOf():
 
 
 def rootToThePowerOf():
-    base_of_root = entry_field.cget("text")
+    base_of_root = str(entry_field.cget("text"))
 
     try:
-        if base_of_root[-1] in "+-/*" and base_of_root != "":
+        if base_of_root[-1] in "+-/*." and base_of_root != "":
                 entry_field.config(text=f"({base_of_root[:-1]})**(")
         else:
             entry_field.config(text=f"({base_of_root})**(")
