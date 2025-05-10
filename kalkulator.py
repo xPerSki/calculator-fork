@@ -41,7 +41,9 @@ def appendCharacter(character: str):
     if old == "" and character in "+-/*.":
         pass
     else:
-        if old and old[-1] == "(" and character == "-":
+        if old and old[-1] == "*" and old[-2] == "*" and character in "+*/.":
+            pass
+        elif old and old[-1] == "(" and character == "-":
             entry_field.config(text=old + character)
         elif old and old[-1] == "(" and character in "+/*.":
             pass
@@ -53,6 +55,7 @@ def appendCharacter(character: str):
                 entry_field.config(text=old[:-1] + character)
 
             else:
+                
                 if old and old[-1] == "-" and character == "-":
                     pass
                 elif old and old[-1] == "-" and old[-2] in "*/(" and character in "+-*/.":
@@ -107,6 +110,8 @@ def backspace():
     if len(str(old)) > 0:
         if old[-1] == "(":
             entry_field.config(text=old[1:-4])
+        elif old[-1] == "*" and old[-2] == "*":
+            entry_field.config(text=old[:-2])
         else:
             entry_field.config(text=old[:-1])
     else:
@@ -192,7 +197,9 @@ def rootToThePowerOf():
     
     base_of_root = str(entry_field.cget("text"))
     if base_of_root:
-        if base_of_root[-1] in "+-/*." and base_of_root != "":
+        if base_of_root[-1] in "+-/*." and base_of_root[-2] in "+-/*.":
+            entry_field.config(text=f"({base_of_root[:-2]})**(")
+        elif base_of_root[-1] in "+-/*." and base_of_root != "":
             entry_field.config(text=f"({base_of_root[:-1]})**(")
         else:
             entry_field.config(text=f"({base_of_root})**(")
