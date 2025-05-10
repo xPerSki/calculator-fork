@@ -168,7 +168,7 @@ def changeSign():
     
     value = str(entry_field.cget("text"))
     if len(value) > 0:
-        if '-' in value:
+        if '-' in value[0]:
             entry_field.config(text=value[1:])
         else:
             entry_field.config(text='-' + value)
@@ -238,18 +238,18 @@ def equals():
                 to_calculate = to_calculate[:-2]+to_calculate[-1]
                 result = eval(to_calculate)
                 eq_field.config(text=to_calculate+"=")
-            
+
             else:
                 result = eval(to_calculate[:-1])
                 eq_field.config(text=to_calculate[:-1]+"=")
 
-        else:   
+        else:
             try:
                 if "(" in to_calculate:
                     to_calculate += ")"
                     result = eval(to_calculate)
                     eq_field.config(text=to_calculate+"=")
-                
+
                 else:
                     result = eval(to_calculate)
                     eq_field.config(text=to_calculate+"=")
