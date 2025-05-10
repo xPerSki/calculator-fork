@@ -50,7 +50,7 @@ def appendCharacter(character: str):
             
         else:
             if old and old[-1] in "*/" and character == "-":
-                    entry_field.config(text=old + character)
+                entry_field.config(text=old + character)
             elif old and old[-1] in "+/*." and character in "+-/*.":
                 entry_field.config(text=old[:-1] + character)
 
@@ -79,8 +79,12 @@ def clearAll():
 
 
 def memoryRead():
-    old = entry_field.cget("text")
-    entry_field.config(text=old + str(MR)) if MR else None
+    old = str(entry_field.cget("text"))
+    if len(old) > 0:
+        sign = '+' if MR > 0 else ''
+    else:
+        sign = ''
+    entry_field.config(text=old + sign + str(MR)) if MR else None
 
 
 def memoryAdd(minus=False):
@@ -125,20 +129,21 @@ def percent():
             old = old[:-2]
             
         elif old and old[-1] in "+-/*.":
-                    old = old[:-1]
+            old = old[:-1]
 
         val = float(old) / 100
         if int(val) == float(val):
             val = int(val)
         entry_field.config(text=str(val))
         eq_field.config(text=old+"/100"+"=")
+
     except Exception:
         pass
 
 
 def factorial():
     result = 1
-    n = entry_field.cget("text")
+    n = str(entry_field.cget("text"))
     try:
         if len(n) > 2 and n[-1] in "+-/*." and n[-2] in "+-/*.":
             n = n[:-2]
