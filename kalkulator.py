@@ -30,18 +30,40 @@ MR = 0
 
 
 def appendCharacter(character: str):
+    if entry_field.cget("text") == "ERR":
+        if character not in "+-/*.":
+            entry_field.config(text=character)
+        else:
+            pass
+        return
+    
     old = str(entry_field.cget("text"))
     if old == "" and character in "+-/*.":
         pass
     else:
-        if old and old[-1] in "+-/*." and character in "+-/*.":
-            entry_field.config(text=old[:-1] + character)
-        else:
+        if old and old[-1] == "(" and character == "-":
             entry_field.config(text=old + character)
+        elif old and old[-1] == "(" and character in "+/*.":
+            pass
+            
+        else:
+            if old and old[-1] in "*/" and character == "-":
+                    entry_field.config(text=old + character)
+            elif old and old[-1] in "+/*." and character in "+-/*.":
+                entry_field.config(text=old[:-1] + character)
+
+            else:
+                if old and old[-1] == "-" and character == "-":
+                    pass
+                elif old and old[-1] == "-" and old[-2] in "*/(" and character in "+-*/.":
+                    pass
+                elif old and old[-1] == "-" and character in "+-*/.":
+                    entry_field.config(text=old[:-1] + character)
+                else:
+                    entry_field.config(text=old + character)
 
 
 def clearEntryLabel():
-    
     if eq_field.cget("text"):
         entry_field.config(text=eval(eq_field.cget("text")[:-1]))
     else:
@@ -77,8 +99,12 @@ def memoryClear():
 
 
 def backspace():
+    if entry_field.cget("text") == "ERR":
+        pass
+        return
+    
     old = entry_field.cget("text")
-    if len(old) > 0:
+    if len(str(old)) > 0:
         if old[-1] == "(":
             entry_field.config(text=old[1:-4])
         else:
@@ -89,12 +115,19 @@ def backspace():
 
 def percent():
     old = str(entry_field.cget("text"))
-    if old:
+    try:
+        if len(old) > 2 and old[-1] in "+-/*." and old[-2] in "+-/*.":
+            old = old[:-2]
+            
+        elif old and old[-1] in "+-/*.":
+                    old = old[:-1]
+
         val = float(old) / 100
         if int(val) == float(val):
             val = int(val)
         entry_field.config(text=str(val))
-    else:
+        eq_field.config(text=old+"/100"+"=")
+    except Exception:
         pass
 
 
@@ -102,26 +135,84 @@ def factorial():
     result = 1
     n = entry_field.cget("text")
     try:
+        if len(n) > 2 and n[-1] in "+-/*." and n[-2] in "+-/*.":
+            n = n[:-2]
+        elif n and n[-1] in "+-/*.":
+            n = n[:-1]
+        elif n and n[0] == "-":
+            raise ValueError
+
         for i in range(2, int(n)+1):
             result *= i
-        eq_field.config(text=str(n)+"!=")
-        entry_field.config(text=result)
-    except ValueError:
+            eq_field.config(text=str(n)+"!=")
+            entry_field.config(text=result)
+            
+    except Exception:
         entry_field.config(text="ERR")
 
 
 def changeSign():
+    if entry_field.cget("text") == "ERR":
+        pass
+        return
+    
     value = str(entry_field.cget("text"))
-    if '-' in value:
-        entry_field.config(text=value[1:])
+    if len(value) > 0:
+        if '-' in value:
+            entry_field.config(text=value[1:])
+        else:
+            entry_field.config(text='-' + value)
     else:
-        entry_field.config(text='-' + value)
+        pass
+
+
+def toThePowerOf():
+    if entry_field.cget("text") == "ERR":
+        pass
+        return
+    
+    base = entry_field.cget("text")
+    if base:
+        if (base[-1] in "*-" and base[-2] in "*(") or base[-1] == "(":
+            pass
+        elif base[-1] in "+-/*." and base[-2] in "+-/*.":
+            entry_field.config(text=base[:-2] + "**")
+        elif base[-1] in "+-/*." and base != "":
+            entry_field.config(text=base[:-1] + "**")
+        else:
+            entry_field.config(text=base + "**")
+    else:
+        pass
+
+
+def rootToThePowerOf():
+    if entry_field.cget("text") == "ERR":
+        pass
+        return
+    
+    base_of_root = str(entry_field.cget("text"))
+    if base_of_root:
+        if base_of_root[-1] in "+-/*." and base_of_root != "":
+            entry_field.config(text=f"({base_of_root[:-1]})**(")
+        else:
+            entry_field.config(text=f"({base_of_root})**(")
+    else:
+        pass
 
 
 def equals():
+    if entry_field.cget("text") == "ERR":
+        entry_field.config(text="")
+        return
+
     to_calculate = str(entry_field.cget("text"))
     if to_calculate:
-        if to_calculate[-1] in "+-/*.":
+        if to_calculate[-1] == "*" and to_calculate[-2] == "*":
+            to_calculate = to_calculate[:-2]
+            result = eval(to_calculate)
+            eq_field.config(text=to_calculate+"=")
+
+        elif to_calculate[-1] in "+-/*.":
             if "(" in to_calculate:
                 to_calculate += ")"
                 to_calculate = to_calculate[:-2]+to_calculate[-1]
@@ -143,38 +234,16 @@ def equals():
                     result = eval(to_calculate)
                     eq_field.config(text=to_calculate+"=")
 
-            except TypeError:
+            except Exception:
                 entry_field.config(text="ERR")
 
-        if int(result) == float(result):
-            result = int(result)
-            
-        entry_field.config(text=result)     
+        try:
+            if int(result) == float(result):
+                result = int(result)
+            entry_field.config(text=result)
 
-    else:
-        pass
-
-
-def toThePowerOf():
-    base = entry_field.cget("text")
-
-    if base:
-        if base[-1] in "+-/*." and base != "":
-                entry_field.config(text=base[:-1] + "**")
-        else:
-            entry_field.config(text=base + "**")
-    else:
-        pass
-
-
-def rootToThePowerOf():
-    base_of_root = str(entry_field.cget("text"))
-
-    if base_of_root:
-        if base_of_root[-1] in "+-/*." and base_of_root != "":
-                entry_field.config(text=f"({base_of_root[:-1]})**(")
-        else:
-            entry_field.config(text=f"({base_of_root})**(")
+        except Exception:
+            entry_field.config(text="ERR")
     else:
         pass
 
