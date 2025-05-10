@@ -1,5 +1,4 @@
 from tkinter import *
-from math import sqrt
 
 window = Tk()
 window.geometry("340x466")
@@ -144,13 +143,13 @@ def equals():
                     result = eval(to_calculate)
                     eq_field.config(text=to_calculate+"=")
 
-                if int(result) == result:
-                    result = int(result)
-                    entry_field.config(text=result)
-
             except TypeError:
                 entry_field.config(text="ERR")
-                
+
+        if int(result) == result:
+            result = int(result)
+            entry_field.config(text=result)         
+
     except IndexError:
         pass
 
