@@ -168,7 +168,7 @@ def changeSign():
     
     value = str(entry_field.cget("text"))
     if len(value) > 0:
-        if '-' in value:
+        if '-' in value[0]:
             entry_field.config(text=value[1:])
         else:
             entry_field.config(text='-' + value)
