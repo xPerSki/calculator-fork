@@ -146,9 +146,10 @@ def equals():
             except TypeError:
                 entry_field.config(text="ERR")
 
-        if int(result) == result:
+        if int(result) == float(result):
             result = int(result)
-            entry_field.config(text=result)         
+            
+        entry_field.config(text=result)     
 
     else:
         pass
