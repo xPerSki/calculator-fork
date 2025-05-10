@@ -71,13 +71,11 @@ def memoryClear():
 def backspace():
     old = entry_field.cget("text")
     
-    if len(old) >= 3:
-        if old[-3] == ")":
-            entry_field.config(text=old[1:-3])
-        else:
-            entry_field.config(text=old[:-1])
-    else:   
+    if old[-1] == "(":
+        entry_field.config(text=old[1:-4])
+    else:
         entry_field.config(text=old[:-1])
+
 
 def percent():
     old = entry_field.cget("text")
@@ -158,8 +156,6 @@ def rootToThePowerOf():
             entry_field.config(text=f"({base_of_root})**(")
     except IndexError:
         pass
-    
-    
 
 
 MC_button = Button(window, text="MC", font=("Arial", 9, "bold"), width=8, bg="black", foreground="white", command=memoryClear)
