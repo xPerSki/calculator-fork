@@ -238,18 +238,18 @@ def equals():
                 to_calculate = to_calculate[:-2]+to_calculate[-1]
                 result = eval(to_calculate)
                 eq_field.config(text=to_calculate+"=")
-
+            
             else:
                 result = eval(to_calculate[:-1])
                 eq_field.config(text=to_calculate[:-1]+"=")
 
-        else:
+        else:   
             try:
                 if "(" in to_calculate:
                     to_calculate += ")"
                     result = eval(to_calculate)
                     eq_field.config(text=to_calculate+"=")
-
+                
                 else:
                     result = eval(to_calculate)
                     eq_field.config(text=to_calculate+"=")
@@ -266,7 +266,7 @@ def equals():
             entry_field.config(text="ERR")
     else:
         pass
-
+      
 
 MC_button = Button(window, text="MC", font=("Arial", 9, "bold"), width=8, bg="black", foreground="white", command=memoryClear)
 MC_button.grid(row=2, column=0, pady=(0, 5))
