@@ -48,7 +48,7 @@ def appendCharacter(character: str):
             
         else:
             if old and old[-1] in "*/" and character == "-":
-                    entry_field.config(text=old + character)
+                entry_field.config(text=old + character)
             elif old and old[-1] in "+/*." and character in "+-/*.":
                 entry_field.config(text=old[:-1] + character)
 
@@ -124,13 +124,14 @@ def percent():
             old = old[:-2]
             
         elif old and old[-1] in "+-/*.":
-                    old = old[:-1]
+            old = old[:-1]
 
         val = float(old) / 100
         if int(val) == float(val):
             val = int(val)
         entry_field.config(text=str(val))
         eq_field.config(text=old+"/100"+"=")
+
     except Exception:
         pass
 
