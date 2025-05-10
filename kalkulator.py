@@ -219,6 +219,14 @@ def equals():
             result = eval(to_calculate)
             eq_field.config(text=to_calculate+"=")
 
+        elif to_calculate[0] == "-" and to_calculate[-1] == "-" and to_calculate[-2] == "*" and to_calculate[-3] == "*":
+            result = eval(to_calculate[1:-3])
+            eq_field.config(text=to_calculate[1:-3]+"=")
+
+        elif to_calculate[0] == "-" and to_calculate[-1] == "-" and to_calculate[-2] == "*":
+            result = eval(to_calculate[1:-2])
+            eq_field.config(text=to_calculate[1:-2]+"=")
+
         elif to_calculate[-1] in "+-/*.":
             if "(" in to_calculate:
                 to_calculate += ")"
