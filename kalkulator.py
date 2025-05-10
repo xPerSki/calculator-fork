@@ -60,14 +60,14 @@ def memoryRead():
 
 def memoryAdd(minus=False):
     global MR
-    try:
+    if entry_field.cget("text"):
         number = str(entry_field.cget("text"))
         if minus:
             number = '-' + number
 
         MR += float(number) if '.' in number else int(number)
         entry_field.config(text="")
-    except ValueError:
+    else:
         pass
 
 
@@ -107,7 +107,7 @@ def factorial():
         eq_field.config(text=str(n)+"!=")
         entry_field.config(text=result)
     except ValueError:
-        pass
+        entry_field.config(text="ERR")
 
 
 def changeSign():
@@ -120,7 +120,7 @@ def changeSign():
 
 def equals():
     to_calculate = str(entry_field.cget("text"))
-    try:
+    if to_calculate:
         if to_calculate[-1] in "+-/*.":
             if "(" in to_calculate:
                 to_calculate += ")"
@@ -150,31 +150,31 @@ def equals():
             result = int(result)
             entry_field.config(text=result)         
 
-    except IndexError:
+    else:
         pass
 
 
 def toThePowerOf():
     base = entry_field.cget("text")
 
-    try:
+    if base:
         if base[-1] in "+-/*." and base != "":
                 entry_field.config(text=base[:-1] + "**")
         else:
             entry_field.config(text=base + "**")
-    except IndexError:
+    else:
         pass
 
 
 def rootToThePowerOf():
     base_of_root = str(entry_field.cget("text"))
 
-    try:
+    if base_of_root:
         if base_of_root[-1] in "+-/*." and base_of_root != "":
                 entry_field.config(text=f"({base_of_root[:-1]})**(")
         else:
             entry_field.config(text=f"({base_of_root})**(")
-    except IndexError:
+    else:
         pass
 
 
