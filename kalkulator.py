@@ -76,8 +76,12 @@ def clearAll():
 
 
 def memoryRead():
-    old = entry_field.cget("text")
-    entry_field.config(text=old + str(MR)) if MR else None
+    old = str(entry_field.cget("text"))
+    if len(old) > 0:
+        sign = '+' if MR > 0 else ''
+    else:
+        sign = ''
+    entry_field.config(text=old + sign + str(MR)) if MR else None
 
 
 def memoryAdd(minus=False):
@@ -133,7 +137,7 @@ def percent():
 
 def factorial():
     result = 1
-    n = entry_field.cget("text")
+    n = str(entry_field.cget("text"))
     try:
         if len(n) > 2 and n[-1] in "+-/*." and n[-2] in "+-/*.":
             n = n[:-2]
